@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -26,7 +28,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 
 @RestController
@@ -193,6 +197,20 @@ public class UserController {
 			result.setStatus(2);
 			result.setMessage("Terjadi kesalahan saat memperbarui profil");
 			return result;
+		}
+	}
+	@PutMapping("/profile/image")
+	public ResponseEntity<String> updateProfileImage(@RequestParam("image") MultipartFile image) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+
+		if (image != null && (image.getContentType().equals("image/jpeg") || image.getContentType().equals("image/png"))) {
+			// Lakukan logika penyimpanan file atau pembaruan gambar profil di sini
+			// ...
+
+			return ResponseEntity.status(HttpStatus.OK).body("Profil gambar berhasil diperbarui");
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format file tidak diizinkan. Gunakan format jpeg atau png.");
 		}
 	}
 }
