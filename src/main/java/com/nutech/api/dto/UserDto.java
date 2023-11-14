@@ -14,4 +14,5 @@ public class UserDto {
 	private String first_name;
 	private String last_name;
 	private String profile_image;
+	private int balance;
 }

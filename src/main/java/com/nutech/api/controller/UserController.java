@@ -140,7 +140,7 @@ public class UserController {
 			}
 		}
 
-		// Pengguna tidak ditemukan, tanggapi sesuai
+		// Pengguna tidak ditemukan
 		HttpResponseModel<UserDto> result = new HttpResponseModel<>();
 		result.setStatus(1);
 		result.setMessage("Pengguna tidak ditemukan");
