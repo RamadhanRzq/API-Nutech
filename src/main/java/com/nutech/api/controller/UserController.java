@@ -20,6 +20,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -88,6 +90,7 @@ public class UserController {
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
 		result.setStatus(0);
+		result.setMessage("Login Berhasil");
 		result.setData(new JwtResponse(token));
 
 		return result;
@@ -108,10 +111,17 @@ public class UserController {
 			@ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
 	})
 	@GetMapping("/profile")
-	public HttpResponseModel<UserDto> profile(@RequestHeader("Authorization") String token) {
-		try {
-			String email = extractEmailFromToken(token);
-			User user = repo.findByEmail(email);
+	public HttpResponseModel<UserDto> profile() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+			// Dapatkan nama pengguna/email dari UserDetails
+			String username = userDetails.getUsername();
+
+			// Cari pengguna berdasarkan nama pengguna atau email
+			User user = repo.findByEmail(username);
 
 			// Memeriksa apakah pengguna ditemukan
 			if (user != null) {
@@ -130,24 +140,13 @@ public class UserController {
 				result.setData(resp);
 
 				return result;
-			} else {
-				// Pengguna tidak ditemukan, tanggapi sesuai
-				HttpResponseModel<UserDto> result = new HttpResponseModel<>();
-				result.setStatus(1); // Misalnya, gunakan status 1 untuk menunjukkan pengguna tidak ditemukan
-				result.setMessage("Pengguna tidak ditemukan");
-				return result;
 			}
-		} catch (Exception e) {
-			// Tangani kesalahan lain jika diperlukan
-			e.printStackTrace(); // atau log kesalahan ke sistem log
-			HttpResponseModel<UserDto> result = new HttpResponseModel<>();
-			result.setStatus(2); // Misalnya, gunakan status 2 untuk menunjukkan kesalahan umum
-			result.setMessage("Terjadi kesalahan");
-			return result;
 		}
-	}
-	private String extractEmailFromToken(String token) {
-		String[] tokenParts = token.split(" ");
-		return tokenParts[1];
+
+		// Pengguna tidak ditemukan, tanggapi sesuai
+		HttpResponseModel<UserDto> result = new HttpResponseModel<>();
+		result.setStatus(1);
+		result.setMessage("Pengguna tidak ditemukan");
+		return result;
 	}
 }
