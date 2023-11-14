@@ -7,6 +7,7 @@ import com.nutech.api.exception.UserAlreadyExistsException;
 import com.nutech.api.model.User;
 import com.nutech.api.model.request.JwtRequest;
 import com.nutech.api.model.request.RegistrationRequest;
+import com.nutech.api.model.request.UpdateRequest;
 import com.nutech.api.model.response.HttpResponseModel;
 import com.nutech.api.model.response.JwtResponse;
 import com.nutech.api.repository.UserRepository;
@@ -25,6 +26,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @CrossOrigin
@@ -148,5 +151,48 @@ public class UserController {
 		result.setStatus(1);
 		result.setMessage("Pengguna tidak ditemukan");
 		return result;
+	}
+	@PutMapping("/profile/update")
+	public HttpResponseModel<UserDto> updateProfile(@RequestBody UpdateRequest updateRequest, Principal principal) {
+		try {
+			if (principal != null) {
+				String username = principal.getName();
+				User user = repo.findByEmail(username);
+				if (user != null) {
+					user.setFirst_name(updateRequest.getFirst_name());
+					user.setLast_name(updateRequest.getLast_name());
+
+					repo.save(user);
+
+					UserDto resp = UserDto.builder()
+							.email(user.getEmail())
+							.first_name(user.getFirst_name())
+							.last_name(user.getLast_name())
+							.profile_image(user.getProfile_image())
+							.build();
+
+					// Membuat dan mengembalikan respons
+					HttpResponseModel<UserDto> result = new HttpResponseModel<>();
+					result.setStatus(0);
+					result.setMessage("Sukses memperbarui profil");
+					result.setData(resp);
+
+					return result;
+				}
+			}
+
+			// Pengguna tidak ditemukan, tanggapi sesuai
+			HttpResponseModel<UserDto> result = new HttpResponseModel<>();
+			result.setStatus(1);
+			result.setMessage("Pengguna tidak ditemukan");
+			return result;
+		} catch (Exception e) {
+			// Tangani kesalahan lain jika diperlukan
+			e.printStackTrace(); // atau log kesalahan ke sistem log
+			HttpResponseModel<UserDto> result = new HttpResponseModel<>();
+			result.setStatus(2);
+			result.setMessage("Terjadi kesalahan saat memperbarui profil");
+			return result;
+		}
 	}
 }
