@@ -18,5 +18,4 @@ public class ServiceDto {
     public ServiceDto(int id, String service_code, String service_name, String service_icon, String service_tariff){
 
     }
-
 }

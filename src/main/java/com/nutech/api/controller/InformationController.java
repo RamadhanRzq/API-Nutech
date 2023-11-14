@@ -80,11 +80,11 @@ public class InformationController {
         servicesIterable.forEach(serviceList::add);
 
         List<ServiceDto> serviceDtos = serviceList.stream()
-                .map(banner -> new ServiceDto(
-                        banner.getService_code(),
-                        banner.getService_name(),
-                        banner.getService_icon(),
-                        banner.getService_tariff()
+                .map(service -> new ServiceDto(
+                        service.getService_code(),
+                        service.getService_name(),
+                        service.getService_icon(),
+                        service.getService_tariff()
                 ))
                 .collect(Collectors.toList());
 
