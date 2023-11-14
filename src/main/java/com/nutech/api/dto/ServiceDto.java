@@ -13,9 +13,14 @@ public class ServiceDto {
     private String service_code;
     private String service_name;
     private String service_icon;
-    private String service_tariff;
+    private int service_tariff;
 
-    public ServiceDto(int id, String service_code, String service_name, String service_icon, String service_tariff){
-
+    public ServiceDto( String service_code, String service_name, String service_icon, String service_tariff) {
+        this.service_code = service_code;
+        this.service_name = service_name;
+        this.service_icon = service_icon;
+        this.service_tariff = Integer.parseInt(service_tariff);
     }
+
+
 }
