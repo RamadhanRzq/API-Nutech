@@ -1,13 +1,9 @@
 package com.nutech.api.model;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +14,7 @@ public class User {
 	@Id
 	private Integer id;
 	
+	@Getter
 	@Column("EMAIL")
 	private String email;
 	
@@ -29,4 +26,7 @@ public class User {
 
 	@Column("PASSWORD")
 	private String password;
+	@Column("PROFILE_IMAGE")
+	private String profile_image;
+
 }
