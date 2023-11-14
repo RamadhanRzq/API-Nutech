@@ -8,7 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(
 		info = @Info(
-				title="Book Store API",
+				title="API Contract SIMS PPOB",
 				description="<h3>Documentation for Take Home Test API</h3>",
 				version = "1.0.0")
 )

@@ -58,7 +58,6 @@ public class UserController {
 		HttpResponseModel<UserDto> result = new HttpResponseModel<UserDto>();
 		User user = repo.findByEmail(req.getEmail());
 		if (user==null) {
-			// User belum ada, lanjutkan
 			repo.save(User.builder()
 					.email(req.getEmail())
 					.first_name(req.getFirst_name())
@@ -123,24 +122,15 @@ public class UserController {
 
 		if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-			// Dapatkan nama pengguna/email dari UserDetails
 			String username = userDetails.getUsername();
-
-			// Cari pengguna berdasarkan nama pengguna atau email
 			User user = repo.findByEmail(username);
-
-			// Memeriksa apakah pengguna ditemukan
 			if (user != null) {
-				// Membuat DTO dari data profil
 				UserDto resp = UserDto.builder()
 						.email(user.getEmail())
 						.first_name(user.getFirst_name())
 						.last_name(user.getLast_name())
 						.profile_image(user.getProfile_image())
 						.build();
-
-				// Membuat dan mengembalikan respons
 				HttpResponseModel<UserDto> result = new HttpResponseModel<>();
 				result.setStatus(0);
 				result.setMessage("Sukses");
@@ -175,7 +165,6 @@ public class UserController {
 							.profile_image(user.getProfile_image())
 							.build();
 
-					// Membuat dan mengembalikan respons
 					HttpResponseModel<UserDto> result = new HttpResponseModel<>();
 					result.setStatus(0);
 					result.setMessage("Sukses memperbarui profil");
@@ -185,14 +174,12 @@ public class UserController {
 				}
 			}
 
-			// Pengguna tidak ditemukan, tanggapi sesuai
 			HttpResponseModel<UserDto> result = new HttpResponseModel<>();
 			result.setStatus(1);
 			result.setMessage("Pengguna tidak ditemukan");
 			return result;
 		} catch (Exception e) {
-			// Tangani kesalahan lain jika diperlukan
-			e.printStackTrace(); // atau log kesalahan ke sistem log
+			e.printStackTrace();
 			HttpResponseModel<UserDto> result = new HttpResponseModel<>();
 			result.setStatus(2);
 			result.setMessage("Terjadi kesalahan saat memperbarui profil");
@@ -205,9 +192,6 @@ public class UserController {
 		String username = authentication.getName();
 
 		if (image != null && (image.getContentType().equals("image/jpeg") || image.getContentType().equals("image/png"))) {
-			// Lakukan logika penyimpanan file atau pembaruan gambar profil di sini
-			// ...
-
 			return ResponseEntity.status(HttpStatus.OK).body("Profil gambar berhasil diperbarui");
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format file tidak diizinkan. Gunakan format jpeg atau png.");
