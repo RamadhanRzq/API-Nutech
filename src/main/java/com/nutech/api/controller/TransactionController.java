@@ -2,11 +2,13 @@ package com.nutech.api.controller;
 
 import com.nutech.api.model.Service;
 import com.nutech.api.model.User;
+import com.nutech.api.model.History;
 import com.nutech.api.model.request.TopupRequest;
 import com.nutech.api.model.request.TransactionRequest;
 import com.nutech.api.model.response.HttpResponseModel;
 import com.nutech.api.repository.ServiceRepository;
 import com.nutech.api.repository.UserRepository;
+import com.nutech.api.service.HistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @Tag(name = "3.Module Transaction")
@@ -27,6 +31,9 @@ public class TransactionController {
     private UserRepository userRepository;
     @Autowired
     private ServiceRepository serviceRepository;
+
+    @Autowired
+    private HistoryService historyService;
 
     @Operation(description = "Information Balance")
     @ApiResponses(value = {
@@ -138,5 +145,15 @@ public class TransactionController {
         double updatedBalance = currentBalance - transactionAmount;
         user.setBalance(String.valueOf(updatedBalance));
         userRepository.save(user);
+    }
+    @GetMapping("/transaction/history")
+    public ResponseEntity<HttpResponseModel<List<History>>> getTransactionHistory(
+            @RequestParam(name = "limit", required = false) Integer limit) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        List<History> transactionHistory = historyService.getTransactionHistory(email, limit);
+        HttpResponseModel<List<History>> response = new HttpResponseModel<>(0, "Success", transactionHistory);
+        return ResponseEntity.ok(response);
     }
 }

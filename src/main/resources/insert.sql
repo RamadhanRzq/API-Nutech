@@ -49,3 +49,11 @@ INSERT INTO table_service (SERVICE_CODE, SERVICE_NAME, SERVICE_ICON, SERVICE_TAR
 ('VOUCHER_MAKANAN', 'Voucher Makanan', 'https://nutech-integrasi.app/dummy.jpg', 100000),
 ('QURBAN', 'Qurban', 'https://nutech-integrasi.app/dummy.jpg', 200000),
 ('ZAKAT', 'Zakat', 'https://nutech-integrasi.app/dummy.jpg', 300000);
+
+DROP TABLE IF EXISTS table_history;
+CREATE TABLE table_history (
+   ID                   INT(11) NOT NULL AUTO_INCREMENT,
+   EMAIL                VARCHAR(150) NOT NULL,
+   TRANSACTION_DATE     VARCHAR(150),
+   CONSTRAINT PK_HISTORY PRIMARY KEY (ID)
+);
