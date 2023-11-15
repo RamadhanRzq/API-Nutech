@@ -27,5 +27,10 @@ public class Service {
     private String service_icon;
 
     @Column("SERVICE_TARIFF")
-    private String service_tariff;
+    private double service_tariff;
+
+    public double getServiceTariff() {
+        return this.service_tariff;
+    }
+
 }
