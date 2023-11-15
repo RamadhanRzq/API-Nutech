@@ -103,50 +103,35 @@ public class TransactionController {
         if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String userEmail = userDetails.getUsername();
-
-            // Retrieve user and service information
             User user = userRepository.findByEmail(userEmail);
             Service service = serviceRepository.findByServiceCode(transactionRequest.getServiceCode());
 
             if (user != null && service != null) {
-                // Check if the user's balance is sufficient for the transaction
                 double transactionAmount = service.getServiceTariff();
                 if (Double.parseDouble(user.getBalance()) >= transactionAmount) {
-                    // Perform the transaction
                     String invoiceNumber = generateInvoiceNumber();
                     updateBalanceAndLogTransaction(user, transactionAmount, invoiceNumber);
-
-                    // Create response
                     HttpResponseModel<String> response = new HttpResponseModel<>(0, "Transaction Successful", invoiceNumber);
                     return ResponseEntity.ok(response);
                 } else {
-                    // Insufficient balance
                     return ResponseEntity.badRequest().body(new HttpResponseModel<>(1, "Insufficient Balance", null));
                 }
             } else {
-                // User or service not found
                 return ResponseEntity.badRequest().body(new HttpResponseModel<>(2, "User or Service not found", null));
             }
         } else {
-            // Unauthorized
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     private String generateInvoiceNumber() {
-        // Implement your logic to generate a unique invoice number here
-        // For example, you can use a combination of timestamp and a random number
         return "INV-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 1000);
     }
 
     private void updateBalanceAndLogTransaction(User user, double transactionAmount, String invoiceNumber) {
         double currentBalance = Double.parseDouble(user.getBalance());
         double updatedBalance = currentBalance - transactionAmount;
-        // Update user's balance
         user.setBalance(String.valueOf(updatedBalance));
         userRepository.save(user);
-
-        // Log the transaction, set transaction_type to PAYMENT in the database
-        // Implement your logic to log the transaction here
     }
 }
