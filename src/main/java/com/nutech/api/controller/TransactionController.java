@@ -38,7 +38,7 @@ public class TransactionController {
     @Operation(description = "Information Balance")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request Successfully"),
-            @ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+            @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @GetMapping("/balance")
     public String getBalance() {
@@ -67,7 +67,7 @@ public class TransactionController {
     @Operation(description = "Top Up Balance")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request Successfully"),
-            @ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+            @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @PostMapping("/topup")
     public ResponseEntity<HttpResponseModel<Double>> topupBalance(@RequestBody TopupRequest topupRequest) {
@@ -106,7 +106,7 @@ public class TransactionController {
     @Operation(description = "Transaction")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request Successfully"),
-            @ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+            @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @PostMapping("/transaction")
     public ResponseEntity<HttpResponseModel<String>> processTransaction(@RequestBody TransactionRequest transactionRequest) {

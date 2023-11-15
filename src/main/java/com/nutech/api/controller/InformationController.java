@@ -32,7 +32,7 @@ public class InformationController {
     @Operation(description = "Information list Banner")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request Successfully"),
-            @ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+            @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @GetMapping("/banner")
     public HttpResponseModel<List<BannerDto>> getBanners() {
@@ -60,7 +60,7 @@ public class InformationController {
     @Operation(description = "Information list Service")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request Successfully"),
-            @ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+            @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @GetMapping("/service")
     public HttpResponseModel<List<ServiceDto>> getServices() {

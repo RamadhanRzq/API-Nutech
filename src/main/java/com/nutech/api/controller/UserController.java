@@ -114,7 +114,7 @@ public class UserController {
 	@Operation(description = "Information profile User")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Request Successfully"),
-			@ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+			@ApiResponse(responseCode = "400", description = "Bad Request")
 	})
 	@GetMapping("/profile")
 	public HttpResponseModel<UserDto> profile() {
