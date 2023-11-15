@@ -40,8 +40,14 @@ public class TransactionController {
             return "Error: Unable to retrieve user details.";
         }
     }
-
     private double retrieveUserBalance(String userEmail) {
-        return 1000.00;
+        User user = userRepository.findByEmail(userEmail);
+
+        if (user != null) {
+            String balanceAsString = user.getBalance();
+            return Double.parseDouble(balanceAsString);
+        } else {
+            throw new RuntimeException("User not found with email: " + userEmail);
+        }
     }
 }
