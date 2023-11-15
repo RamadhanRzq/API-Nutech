@@ -68,11 +68,11 @@ public class TransactionController {
             String userEmail = userDetails.getUsername();
 
             if (topupRequest.getAmount() < 0) {
-                return ResponseEntity.badRequest().body(new HttpResponseModel<>(1, "Amount must be greater than or equal to 0", null));
+                return ResponseEntity.badRequest().body(new HttpResponseModel<>(1, "Jumlah saldo harus lebih dari 0", null));
             }
 
             double updatedBalance = topupUserBalance(userEmail, topupRequest.getAmount());
-            HttpResponseModel<Double> response = new HttpResponseModel<>(0, "Top Up Successfully", updatedBalance);
+            HttpResponseModel<Double> response = new HttpResponseModel<>(0, "Top Up Berhasil", updatedBalance);
 
             return ResponseEntity.ok(response);
         } else {
