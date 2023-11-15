@@ -1,9 +1,6 @@
 package com.nutech.api.controller;
 
-import com.nutech.api.dto.BannerDto;
-import com.nutech.api.model.Banner;
 import com.nutech.api.model.User;
-import com.nutech.api.model.response.HttpResponseModel;
 import com.nutech.api.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,13 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -34,12 +26,19 @@ public class TransactionController {
     @GetMapping("/balance")
     public String getBalance() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
 
-        double userBalance = retrieveUserBalance(currentUser.getEmail());
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String userEmail = userDetails.getUsername();
 
-        // Membuat response
-        return "User: " + currentUser.getEmail() + ", Balance: " + userBalance;
+            double userBalance = retrieveUserBalance(userEmail);
+
+            // Membuat response
+            return "User: " + userEmail + ", Balance: " + userBalance;
+        } else {
+            // Handle the case where the principal is not of type UserDetails
+            return "Error: Unable to retrieve user details.";
+        }
     }
 
     private double retrieveUserBalance(String userEmail) {
