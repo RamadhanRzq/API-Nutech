@@ -96,6 +96,11 @@ public class TransactionController {
             throw new RuntimeException("User not found with email: " + userEmail);
         }
     }
+    @Operation(description = "Transaction")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Request Successfully"),
+            @ApiResponse(responseCode = "400", description = "Status code 4001 in the response means registration failed")
+    })
     @PostMapping("/transaction")
     public ResponseEntity<HttpResponseModel<String>> processTransaction(@RequestBody TransactionRequest transactionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -104,7 +109,7 @@ public class TransactionController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String userEmail = userDetails.getUsername();
             User user = userRepository.findByEmail(userEmail);
-            Service service = serviceRepository.findByServiceCode(transactionRequest.getServiceCode());
+            Service service = serviceRepository.findByService_code(transactionRequest.getService_code());
 
             if (user != null && service != null) {
                 double transactionAmount = service.getServiceTariff();

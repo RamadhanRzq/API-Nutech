@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class TransactionRequest {
-    private String serviceCode;
+    private String service_code;
 
+    public String getService_code() {
+        return service_code;
+    }
 }

@@ -76,7 +76,7 @@ public class InformationController {
                         service.getService_code(),
                         service.getService_name(),
                         service.getService_icon(),
-                        service.getService_tariff()
+                        String.valueOf(service.getService_tariff())
                 ))
                 .collect(Collectors.toList());
 
